@@ -192,7 +192,7 @@ export default function Dashboard() {
               {showMenu && (
                 <div className="absolute bottom-16 right-0 bg-white rounded-lg shadow-lg overflow-hidden w-64">
                   {/* Adicionar nova categoria */}
-                  <a
+                  <Link
                     href="/admin/add-category"
                     className="w-full text-left px-4 py-3 hover:bg-gray-100 flex items-center block"
                   >
@@ -200,10 +200,10 @@ export default function Dashboard() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                     </svg>
                     Adicionar nova categoria
-                  </a>
+                  </Link>
 
                   {/* Adicionar nova pergunta */}
-                  <a
+                  <Link
                     href="/admin/add-question"
                     className="w-full text-left px-4 py-3 hover:bg-gray-100 flex items-center block"
                   >
@@ -211,10 +211,10 @@ export default function Dashboard() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                     </svg>
                     Adicionar nova pergunta
-                  </a>
+                  </Link>
 
                   {/* Editar categorias */}
-                  <a
+                  <Link
                     href="/admin/edit-categories"
                     className="w-full text-left px-4 py-3 hover:bg-gray-100 flex items-center block"
                   >
@@ -222,10 +222,10 @@ export default function Dashboard() {
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
       </svg>
       Editar categorias
-    </a>
+    </Link>
 
     {/* Editar perguntas */}
-    <a
+    <Link
       href="/admin/edit-questions"
       className="w-full text-left px-4 py-3 hover:bg-gray-100 flex items-center block"
     >
@@ -233,7 +233,7 @@ export default function Dashboard() {
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5h2m-1 0v14m0 0h4m-4 0H7" />
       </svg>
       Editar perguntas
-    </a>
+    </Link>
 
   </div>
 )}
