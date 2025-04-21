@@ -5,6 +5,7 @@ import { useAuth } from '@/lib/auth';
 import { categories, initializeDefaultData } from '@/lib/quiz-data';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function Dashboard() {
   const { user, logout } = useAuth();
@@ -91,7 +92,6 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      {/* Componente para suprimir erros de console */}
       <ErrorSuppressor />
       
       <header className="bg-white shadow">
@@ -101,14 +101,14 @@ export default function Dashboard() {
             <span className="text-gray-600">Olá, {user.name}</span>
             <button
               onClick={logout}
-              className={getColorClass('red', 'bg') + " px-3 py-2 text-sm font-medium text-white hover:" + getColorClass('red', 'hover')}
+              className="rounded-md bg-red-600 px-3 py-2 text-sm font-medium text-white hover:bg-red-700"
             >
               Sair
             </button>
           </div>
         </div>
       </header>
-
+      
       <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         <div className="mb-8">
           <h2 className="text-2xl font-bold mb-4">Bem-vindo ao eQuizz!</h2>
@@ -144,7 +144,7 @@ export default function Dashboard() {
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredCategories.map((category) => (
+          {filteredCategories.map((category)  => (
             <div
               key={category.id}
               className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
@@ -164,7 +164,6 @@ export default function Dashboard() {
           ))}
         </div>
         
-        {/* Botão flutuante para administradores */}
         {user.isAdmin && (
           <div className="fixed bottom-8 right-8">
             <div className="relative">
@@ -188,57 +187,90 @@ export default function Dashboard() {
                 </svg>
               </button>
               
-              {/* Menu de opções */}
               {showMenu && (
                 <div className="absolute bottom-16 right-0 bg-white rounded-lg shadow-lg overflow-hidden w-64">
-                  {/* Adicionar nova categoria */}
-                  <Link
+                  <Link 
                     href="/admin/add-category"
                     className="w-full text-left px-4 py-3 hover:bg-gray-100 flex items-center block"
                   >
-                    <svg className="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                    <svg
+                      className="w-5 h-5 mr-2 text-blue-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
+                      />
                     </svg>
                     Adicionar nova categoria
                   </Link>
-
-                  {/* Adicionar nova pergunta */}
-                  <Link
+                  <Link 
                     href="/admin/add-question"
                     className="w-full text-left px-4 py-3 hover:bg-gray-100 flex items-center block"
                   >
-                    <svg className="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                    <svg
+                      className="w-5 h-5 mr-2 text-blue-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
                     </svg>
                     Adicionar nova pergunta
                   </Link>
-
-                  {/* Editar categorias */}
-                  <Link
+                  <Link 
                     href="/admin/edit-categories"
                     className="w-full text-left px-4 py-3 hover:bg-gray-100 flex items-center block"
                   >
-                    <svg className="w-5 h-5 mr-2 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
-      Editar categorias
-    </Link>
-
-    {/* Editar perguntas */}
-    <Link
-      href="/admin/edit-questions"
-      className="w-full text-left px-4 py-3 hover:bg-gray-100 flex items-center block"
-    >
-      <svg className="w-5 h-5 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5h2m-1 0v14m0 0h4m-4 0H7" />
-      </svg>
-      Editar perguntas
-    </Link>
-
-  </div>
-)}
+                    <svg
+                      className="w-5 h-5 mr-2 text-blue-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                      />
+                    </svg>
+                    Editar categorias
+                  </Link>
+                  <Link 
+                    href="/admin/edit-questions"
+                    className="w-full text-left px-4 py-3 hover:bg-gray-100 flex items-center block"
+                  >
+                    <svg
+                      className="w-5 h-5 mr-2 text-blue-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                      />
+                    </svg>
+                    Editar perguntas
+                  </Link>
                 </div>
-              )}
+              ) }
             </div>
           </div>
         )}
