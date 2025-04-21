@@ -14,33 +14,30 @@ export default function AddCategory() {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isClient, setIsClient] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  // Marcar que estamos no cliente e verificar autenticação
+  // Marcar que estamos no cliente
   useEffect(() => {
     setIsClient(true);
+  }, []);
+
+  // Verificar autenticação separadamente
+  useEffect(() => {
+    if (!isClient) return;
     
-    // Verificar se o usuário é administrador
     if (user) {
       const isAdmin = user.isAdmin === true;
-      if (!isAdmin) {
+      if (isAdmin) {
+        setIsAuthenticated(true);
+      } else {
+        // Redirecionar não-administradores
         router.push('/dashboard');
       }
-    } else {
-      router.push('/dashboard');
+    } else if (isClient) {
+      // Redirecionar usuários não autenticados
+      router.push('/login');
     }
-  }, [user, router]);
-
-  // Cores disponíveis
-  const availableColors = [
-    { name: 'Azul', value: 'blue' },
-    { name: 'Verde', value: 'green' },
-    { name: 'Vermelho', value: 'red' },
-    { name: 'Amarelo', value: 'yellow' },
-    { name: 'Roxo', value: 'purple' },
-    { name: 'Rosa', value: 'pink' },
-    { name: 'Índigo', value: 'indigo' },
-    { name: 'Laranja', value: 'orange' }
-  ];
+  }, [user, isClient, router]);
 
   // Adicionar nova categoria
   const handleSubmit = (e) => {
@@ -72,37 +69,38 @@ export default function AddCategory() {
       return;
     }
 
-    // Criar ID a partir do título (slug)
-    const id = title
-      .toLowerCase()
-      .replace(/[^\w\s]/gi, '')
-      .replace(/\s+/g, '-');
+    try {
+      // Criar ID a partir do título (slug)
+      const id = title
+        .toLowerCase()
+        .replace(/[^\w\s]/gi, '')
+        .replace(/\s+/g, '-');
 
-    // Criar nova categoria
-    const newCategory = {
-      id,
-      title,
-      description,
-      color
-    };
+      // Criar nova categoria
+      const newCategory = {
+        id,
+        title,
+        description,
+        color
+      };
 
-    // Salvar no localStorage
-    const storedCategories = localStorage.getItem('adminCategories');
-    const adminCategories = storedCategories ? JSON.parse(storedCategories) : [];
-    adminCategories.push(newCategory);
-    localStorage.setItem('adminCategories', JSON.stringify(adminCategories));
+      // Salvar no localStorage
+      const storedCategories = localStorage.getItem('adminCategories');
+      const adminCategories = storedCategories ? JSON.parse(storedCategories) : [];
+      adminCategories.push(newCategory);
+      localStorage.setItem('adminCategories', JSON.stringify(adminCategories));
 
-    // Redirecionar para o dashboard
-    router.push('/dashboard');
-  };
-
-  // Função para voltar ao dashboard
-  const handleBackToDashboard = () => {
-    router.push('/dashboard');
+      // Redirecionar para o dashboard
+      window.location.href = '/dashboard';
+    } catch (err) {
+      console.error('Erro ao salvar categoria:', err);
+      setError('Ocorreu um erro ao salvar a categoria.');
+      setIsLoading(false);
+    }
   };
 
   // Mostrar tela de carregamento enquanto verificamos a autenticação
-  if (!isClient || !user) {
+  if (!isClient || !isAuthenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-black">
         <div className="text-center">
@@ -113,25 +111,17 @@ export default function AddCategory() {
     );
   }
 
-  // Verificar se o usuário é administrador
-  const isAdmin = user.isAdmin === true;
-  
-  // Se não for administrador, não renderizar o conteúdo (o redirecionamento já foi iniciado no useEffect)
-  if (!isAdmin) {
-    return null;
-  }
-
   return (
     <div className="min-h-screen bg-black text-white">
       <div className="container mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-2xl font-bold">eQuizz - Adicionar Categoria</h1>
-          <button 
-            onClick={handleBackToDashboard}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+          <a 
+            href="/dashboard"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded inline-block"
           >
             Voltar ao Dashboard
-          </button>
+          </a>
         </div>
 
         <div className="max-w-2xl mx-auto">
