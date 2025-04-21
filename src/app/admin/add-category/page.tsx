@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth';
 import { categories } from '@/lib/quiz-data';
@@ -13,15 +13,22 @@ export default function AddCategory() {
   const [color, setColor] = useState('blue');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isClient, setIsClient] = useState(false);
 
-  // Verificar se o usuário é administrador
-  const isAdmin = user?.isAdmin === true;
-  
-  // Redirecionar se não for administrador
-  if (!user || !isAdmin) {
-    router.push('/dashboard');
-    return null;
-  }
+  // Marcar que estamos no cliente e verificar autenticação
+  useEffect(() => {
+    setIsClient(true);
+    
+    // Verificar se o usuário é administrador
+    if (user) {
+      const isAdmin = user.isAdmin === true;
+      if (!isAdmin) {
+        router.push('/dashboard');
+      }
+    } else {
+      router.push('/dashboard');
+    }
+  }, [user, router]);
 
   // Cores disponíveis
   const availableColors = [
@@ -88,6 +95,26 @@ export default function AddCategory() {
     // Redirecionar para o dashboard
     router.push('/dashboard');
   };
+
+  // Mostrar tela de carregamento enquanto verificamos a autenticação
+  if (!isClient || !user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+          <p className="mt-4 text-gray-700">Carregando...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Verificar se o usuário é administrador
+  const isAdmin = user.isAdmin === true;
+  
+  // Se não for administrador, não renderizar o conteúdo (o redirecionamento já foi iniciado no useEffect)
+  if (!isAdmin) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-gray-100">
