@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth';
 import { categories } from '@/lib/quiz-data';
-import Link from 'next/link';
 
 export default function AddCategory() {
   const { user } = useAuth();
@@ -97,6 +96,11 @@ export default function AddCategory() {
     router.push('/dashboard');
   };
 
+  // Função para voltar ao dashboard
+  const handleBackToDashboard = () => {
+    router.push('/dashboard');
+  };
+
   // Mostrar tela de carregamento enquanto verificamos a autenticação
   if (!isClient || !user) {
     return (
@@ -122,12 +126,12 @@ export default function AddCategory() {
       <div className="container mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-2xl font-bold">eQuizz - Adicionar Categoria</h1>
-          <Link 
-            href="/dashboard"
+          <button 
+            onClick={handleBackToDashboard}
             className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
           >
             Voltar ao Dashboard
-          </Link>
+          </button>
         </div>
 
         <div className="max-w-2xl mx-auto">
