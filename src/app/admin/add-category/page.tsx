@@ -91,7 +91,7 @@ export default function AddCategory() {
       localStorage.setItem('adminCategories', JSON.stringify(adminCategories));
 
       // Redirecionar para o dashboard
-      window.location.href = '/dashboard';
+     router.push('/dashboard');
     } catch (err) {
       console.error('Erro ao salvar categoria:', err);
       setError('Ocorreu um erro ao salvar a categoria.');
