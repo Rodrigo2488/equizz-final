@@ -13,203 +13,89 @@ export default function AddCategory() {
   const [color, setColor] = useState('blue');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [isClient, setIsClient] = useState(false);
 
-  // Marcar que estamos no cliente e verificar autenticação
   useEffect(() => {
-    setIsClient(true);
-    
-    // Verificar se o usuário é administrador
-    if (user) {
-      const isAdmin = user.isAdmin === true;
-      if (!isAdmin) {
-        router.push('/dashboard');
-      }
-    } else {
+    if (user === undefined) return;
+    if (!user || !user.isAdmin) {
       router.push('/dashboard');
     }
-  }, [user, router]);
+  }, [user]);
 
-  // Cores disponíveis
-  const availableColors = [
-    { name: 'Azul', value: 'blue' },
-    { name: 'Verde', value: 'green' },
-    { name: 'Roxo', value: 'purple' },
-    { name: 'Vermelho', value: 'red' },
-    { name: 'Amarelo', value: 'yellow' },
-    { name: 'Indigo', value: 'indigo' },
-    { name: 'Rosa', value: 'pink' },
-    { name: 'Laranja', value: 'orange' }
-  ];
-
-  // Adicionar nova categoria
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
 
-    // Validação básica
     if (!title.trim()) {
-      setError('O título da categoria é obrigatório.');
+      setError('O título é obrigatório.');
       setIsLoading(false);
       return;
     }
 
     if (!description.trim()) {
-      setError('A descrição da categoria é obrigatória.');
+      setError('A descrição é obrigatória.');
       setIsLoading(false);
       return;
     }
 
-    // Verificar se já existe uma categoria com o mesmo título
-    const categoryExists = categories.some(
-      cat => cat.title.toLowerCase() === title.toLowerCase()
+    const exists = categories.some(
+      (cat) => cat.title.toLowerCase() === title.toLowerCase()
     );
-
-    if (categoryExists) {
-      setError('Já existe uma categoria com este título.');
+    if (exists) {
+      setError('Já existe uma categoria com esse título.');
       setIsLoading(false);
       return;
     }
 
-    // Criar ID a partir do título (slug)
-    const id = title
-      .toLowerCase()
-      .replace(/[^\w\s]/gi, '')
-      .replace(/\s+/g, '-');
+    const id = title.toLowerCase().replace(/[^\w\s]/gi, '').replace(/\s+/g, '-');
+    const newCategory = { id, title, description, color };
 
-    // Criar nova categoria
-    const newCategory = {
-      id,
-      title,
-      description,
-      color
-    };
-
-    // Salvar no localStorage
-    const storedCategories = localStorage.getItem('adminCategories');
-    const adminCategories = storedCategories ? JSON.parse(storedCategories) : [];
+    const stored = localStorage.getItem('adminCategories');
+    const adminCategories = stored ? JSON.parse(stored) : [];
     adminCategories.push(newCategory);
     localStorage.setItem('adminCategories', JSON.stringify(adminCategories));
 
-    // Redirecionar para o dashboard
     router.push('/dashboard');
   };
 
-  // Mostrar tela de carregamento enquanto verificamos a autenticação
-  if (!isClient || !user) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-          <p className="mt-4 text-gray-700">Carregando...</p>
-        </div>
-      </div>
-    );
-  }
-
-  // Verificar se o usuário é administrador
-  const isAdmin = user.isAdmin === true;
-  
-  // Se não for administrador, não renderizar o conteúdo (o redirecionamento já foi iniciado no useEffect)
-  if (!isAdmin) {
-    return null;
-  }
+  const colorOptions = ['blue', 'green', 'red', 'yellow', 'purple'];
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <header className="bg-white shadow">
-        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 flex justify-between items-center">
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900">eQuizz - Adicionar Categoria</h1>
-          <button
-            onClick={() => router.push('/dashboard')}
-            className="rounded-md bg-blue-600 px-3 py-2 text-sm font-medium text-white hover:bg-blue-700"
-          >
-            Voltar ao Dashboard
-          </button>
+    <div className="p-6 max-w-2xl mx-auto">
+      <h1 className="text-2xl font-bold mb-4">Adicionar Categoria</h1>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <input
+          type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder="Título"
+          className="w-full border rounded p-2"
+        />
+        <textarea
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder="Descrição"
+          className="w-full border rounded p-2"
+        />
+        <div className="flex space-x-2">
+          {colorOptions.map((c) => (
+            <button
+              key={c}
+              type="button"
+              onClick={() => setColor(c)}
+              className={`w-8 h-8 rounded-full bg-${c}-500 ${color === c ? 'ring-2 ring-black' : ''}`}
+            />
+          ))}
         </div>
-      </header>
-      
-      <main className="mx-auto max-w-3xl px-4 py-6 sm:px-6 lg:px-8">
-        <div className="bg-white p-8 rounded-lg shadow">
-          <h2 className="text-2xl font-bold mb-6">Nova Categoria</h2>
-          
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
-                Título da Categoria
-              </label>
-              <input
-                id="title"
-                type="text"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Ex: Geografia"
-              />
-            </div>
-            
-            <div>
-              <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
-                Descrição
-              </label>
-              <textarea
-                id="description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                rows={3}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Ex: Teste seus conhecimentos sobre países, capitais e geografia mundial!"
-              />
-            </div>
-            
-            <div>
-              <label htmlFor="color" className="block text-sm font-medium text-gray-700 mb-1">
-                Cor da Categoria
-              </label>
-              <div className="grid grid-cols-4 gap-3">
-                {availableColors.map((colorOption) => (
-                  <div 
-                    key={colorOption.value}
-                    onClick={() => setColor(colorOption.value)}
-                    className={`cursor-pointer p-3 rounded-md border-2 ${
-                      color === colorOption.value 
-                        ? `border-${colorOption.value}-600 bg-${colorOption.value}-50` 
-                        : 'border-gray-200'
-                    }`}
-                  >
-                    <div className={`h-6 w-full rounded bg-${colorOption.value}-600 mb-1`}></div>
-                    <p className="text-xs text-center">{colorOption.name}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-            
-            {error && (
-              <div className="rounded-md bg-red-50 p-3">
-                <p className="text-sm text-red-600">{error}</p>
-              </div>
-            )}
-            
-            <div className="flex justify-end">
-              <button
-                type="button"
-                onClick={() => router.push('/dashboard')}
-                className="px-4 py-2 border border-gray-300 rounded-md mr-3 hover:bg-gray-50"
-              >
-                Cancelar
-              </button>
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-blue-300"
-              >
-                {isLoading ? 'Salvando...' : 'Salvar Categoria'}
-              </button>
-            </div>
-          </form>
-        </div>
-      </main>
+        {error && <p className="text-red-500">{error}</p>}
+        <button
+          type="submit"
+          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 disabled:bg-blue-300"
+          disabled={isLoading}
+        >
+          {isLoading ? 'Salvando...' : 'Salvar'}
+        </button>
+      </form>
     </div>
   );
 }
