@@ -101,14 +101,14 @@ export default function Dashboard() {
             <span className="text-gray-600">Olá, {user.name}</span>
             <button
               onClick={logout}
-              className="rounded-md bg-red-600 px-3 py-2 text-sm font-medium text-white hover:bg-red-700"
+              className={getColorClass('red', 'bg') + " px-3 py-2 text-sm font-medium text-white hover:" + getColorClass('red', 'hover')}
             >
               Sair
             </button>
           </div>
         </div>
       </header>
-      
+
       <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         <div className="mb-8">
           <h2 className="text-2xl font-bold mb-4">Bem-vindo ao eQuizz!</h2>
@@ -189,37 +189,36 @@ export default function Dashboard() {
               </button>
               
               {/* Menu de opções */}
-             {showMenu && (
-  <div className="absolute bottom-16 right-0 bg-white rounded-lg shadow-lg overflow-hidden w-64">
-    
-    {/* Adicionar nova categoria */}
-    <a
-      href="/admin/add-category"
-      className="w-full text-left px-4 py-3 hover:bg-gray-100 flex items-center block"
-    >
-      <svg className="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-      </svg>
-      Adicionar nova categoria
-    </a>
+              {showMenu && (
+                <div className="absolute bottom-16 right-0 bg-white rounded-lg shadow-lg overflow-hidden w-64">
+                  {/* Adicionar nova categoria */}
+                  <a
+                    href="/admin/add-category"
+                    className="w-full text-left px-4 py-3 hover:bg-gray-100 flex items-center block"
+                  >
+                    <svg className="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                    </svg>
+                    Adicionar nova categoria
+                  </a>
 
-    {/* Adicionar nova pergunta */}
-    <a
-      href="/admin/add-question"
-      className="w-full text-left px-4 py-3 hover:bg-gray-100 flex items-center block"
-    >
-      <svg className="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-      </svg>
-      Adicionar nova pergunta
-    </a>
+                  {/* Adicionar nova pergunta */}
+                  <a
+                    href="/admin/add-question"
+                    className="w-full text-left px-4 py-3 hover:bg-gray-100 flex items-center block"
+                  >
+                    <svg className="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                    </svg>
+                    Adicionar nova pergunta
+                  </a>
 
-    {/* Editar categorias */}
-    <a
-      href="/admin/edit-categories"
-      className="w-full text-left px-4 py-3 hover:bg-gray-100 flex items-center block"
-    >
-      <svg className="w-5 h-5 mr-2 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  {/* Editar categorias */}
+                  <a
+                    href="/admin/edit-categories"
+                    className="w-full text-left px-4 py-3 hover:bg-gray-100 flex items-center block"
+                  >
+                    <svg className="w-5 h-5 mr-2 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
       </svg>
       Editar categorias
